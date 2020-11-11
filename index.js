@@ -51,7 +51,7 @@ const fetchNews = async (url) => {
     const newData = await getPageData(i);
     results.push(...newData);
   }
-  console.log(results.length);
+  console.log(`Parsing finished. ${results.length} news added`);
   browser.close();
 }
 
