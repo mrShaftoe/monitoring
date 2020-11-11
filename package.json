@@ -1,0 +1,17 @@
+{
+  "name": "monitoring",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "puppeteer": "^5.4.1"
+  },
+  "devDependencies": {
+    "axios": "0.21.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
