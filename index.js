@@ -33,7 +33,12 @@ const fetchNews = async (url) => {
       return news.map(getNewsData);
     });
     page.close();
-    return result;
+
+    return result.map((elem) => {
+      const date = elem.date;
+      elem.date = new Date(date.year, date.month, date.date)
+      return elem;
+    });
   }
 
   const browser = await pup.launch({
@@ -42,12 +47,12 @@ const fetchNews = async (url) => {
   });
 
   const results = [];
-  for (let i=1; i < 10; i++) {
+  for (let i=1; i < 2; i++) {
     const newData = await getPageData(i);
     results.push(...newData);
   }
-  console.log(results);
   console.log(results.length);
+  browser.close();
 }
 
 fetchNews(url);
