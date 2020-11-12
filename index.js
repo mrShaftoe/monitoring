@@ -1,4 +1,7 @@
 const pup = require("puppeteer");
+const dayjs = require('dayjs');
+const fs = require('fs');
+
 const url = "https://xn--80aesfpebagmfblc0a.xn--p1ai/news/?page="
 
 const fetchNews = async (url) => {
@@ -36,23 +39,41 @@ const fetchNews = async (url) => {
 
     return result.map((elem) => {
       const date = elem.date;
-      elem.date = new Date(date.year, date.month, date.date)
+      elem.date = new Date(date.year, date.month - 1, date.date);
       return elem;
     });
   }
 
   const browser = await pup.launch({
-    headless: false,
+    headless: true,
     defaultViewport: null
   });
 
   const results = [];
-  for (let i=1; i < 2; i++) {
-    const newData = await getPageData(i);
+  let loading = true;
+  let i = 1;
+  const today = dayjs().startOf('day');
+  const startDay = today.subtract(4,'day');
+  while (loading) {
+    const newData = await getPageData(i++);
     results.push(...newData);
+    
+    const lastResult = results.slice(-1)[0];
+    if (startDay.isSame(lastResult.date, 'day')) {
+      loading = false;
+    };
   }
   console.log(`Parsing finished. ${results.length} news added`);
+  const filteredResults = results.filter(({date}) => !startDay.isSame(date, 'day'));
+  console.log(`Results filtered. There are ${filteredResults.length} new now`);
   browser.close();
+
+  const jsonData = JSON.stringify(results);
+  fs.writeFile('data.json', jsonData, (err) => {
+    if (err) {
+      console.log(err);
+    }
+  });
 }
 
 fetchNews(url);

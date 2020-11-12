@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "dayjs": "^1.9.6",
     "puppeteer": "^5.4.1"
   },
   "devDependencies": {
